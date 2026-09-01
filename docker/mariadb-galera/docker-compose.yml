@@ -1,0 +1,90 @@
+services:
+
+  mariadb-node1:
+    image: devsaurus/mariadb-galera:10.11
+    container_name: mariadb-node1
+    hostname: mariadb-node1
+
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpass
+      MARIADB_DATABASE: companydb
+      MARIADB_USER: appuser
+      MARIADB_PASSWORD: apppass
+
+      GALERA_CLUSTER_NAME: dev-galera
+      GALERA_CLUSTER_ADDRESS: mariadb-node1,mariadb-node2,mariadb-node3
+      GALERA_CLUSTER_BOOTSTRAP: "yes"
+      GALERA_NODE_NAME: mariadb-node1
+      GALERA_SST_PASSWORD: sstpass
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - mariadb-node1-data:/var/lib/mysql
+
+    networks:
+      - galera-network
+
+
+  mariadb-node2:
+    image: devsaurus/mariadb-galera:10.11
+    container_name: mariadb-node2
+    hostname: mariadb-node2
+
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpass
+      MARIADB_DATABASE: companydb
+      MARIADB_USER: appuser
+      MARIADB_PASSWORD: apppass
+
+      GALERA_CLUSTER_NAME: dev-galera
+      GALERA_CLUSTER_ADDRESS: mariadb-node1,mariadb-node2,mariadb-node3
+      GALERA_NODE_NAME: mariadb-node2
+      GALERA_SST_PASSWORD: sstpass
+
+    ports:
+      - "3308:3306"
+
+    volumes:
+      - mariadb-node2-data:/var/lib/mysql
+
+    networks:
+      - galera-network
+
+
+  mariadb-node3:
+    image: devsaurus/mariadb-galera:10.11
+    container_name: mariadb-node3
+    hostname: mariadb-node3
+
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpass
+      MARIADB_DATABASE: companydb
+      MARIADB_USER: appuser
+      MARIADB_PASSWORD: apppass
+
+      GALERA_CLUSTER_NAME: dev-galera
+      GALERA_CLUSTER_ADDRESS: mariadb-node1,mariadb-node2,mariadb-node3
+      GALERA_NODE_NAME: mariadb-node3
+      GALERA_SST_PASSWORD: sstpass
+
+    ports:
+      - "3309:3306"
+
+    volumes:
+      - mariadb-node3-data:/var/lib/mysql
+
+    networks:
+      - galera-network
+
+
+volumes:
+  mariadb-node1-data:
+  mariadb-node2-data:
+  mariadb-node3-data:
+
+
+networks:
+  galera-network:
+    driver: bridge
