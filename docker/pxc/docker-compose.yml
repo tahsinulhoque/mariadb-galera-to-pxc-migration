@@ -1,0 +1,83 @@
+services:
+
+  pxc-node1:
+    build: .
+    container_name: pxc-node1
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      XTRABACKUP_PASSWORD: ${XTRABACKUP_PASSWORD}
+      CLUSTER_NAME: pxc-test-cluster
+
+    command: ["--wsrep-new-cluster"]
+
+    volumes:
+      - ./certs:/etc/mysql/certs:ro
+      - ./data-pxc1:/var/lib/mysql
+
+    ports:
+      - "3310:3306"
+
+    networks:
+      - pxcnet
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+
+  pxc-node2:
+    build: .
+    container_name: pxc-node2
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      XTRABACKUP_PASSWORD: ${XTRABACKUP_PASSWORD}
+      CLUSTER_NAME: pxc-test-cluster
+      CLUSTER_JOIN: pxc-node1
+
+    volumes:
+      - ./certs:/etc/mysql/certs:ro
+      - ./data-pxc2:/var/lib/mysql
+
+    ports:
+      - "3311:3306"
+
+    networks:
+      - pxcnet
+
+    depends_on:
+      pxc-node1:
+        condition: service_healthy
+
+
+  pxc-node3:
+    build: .
+    container_name: pxc-node3
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      XTRABACKUP_PASSWORD: ${XTRABACKUP_PASSWORD}
+      CLUSTER_NAME: pxc-test-cluster
+      CLUSTER_JOIN: pxc-node1
+
+    volumes:
+      - ./certs:/etc/mysql/certs:ro
+      - ./data-pxc3:/var/lib/mysql
+
+    ports:
+      - "3312:3306"
+
+    networks:
+      - pxcnet
+
+    depends_on:
+      pxc-node1:
+        condition: service_healthy
+
+
+networks:
+  pxcnet:
+    driver: bridge
