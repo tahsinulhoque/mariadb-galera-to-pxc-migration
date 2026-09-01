@@ -1,0 +1,3 @@
+docker/pxc/.env
+docker/pxc/certs/
+docker/pxc/data-*/
