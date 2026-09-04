@@ -1,0 +1,60 @@
+name: Migration CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  validate:
+    name: Validate Migration Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check Bash scripts
+        run: |
+          echo "Checking Bash scripts..."
+
+          find . -name "*.sh" -print0 | while IFS= read -r -d '' file
+          do
+            echo "Checking: $file"
+            bash -n "$file"
+          done
+
+          echo "All Bash scripts passed syntax validation."
+
+      - name: Validate Docker Compose configuration
+        run: |
+          echo "Validating Docker Compose configuration..."
+
+          docker compose -f docker/mariadb-galera/docker-compose.yml config --quiet
+
+          echo "MariaDB Galera Compose configuration is valid."
+
+      - name: Check required project files
+        run: |
+          echo "Checking required project files..."
+
+          test -f README.md
+          test -f compatibility/compatibility-check.md
+          test -f migration/migration-strategy.md
+          test -f migration/test-migration.md
+          test -f migration/cutover-plan.md
+          test -f migration/production-safety-gates.md
+          test -f tests/automated-testing.md
+          test -f validation/validation-report.md
+          test -f runbook/migration-runbook.md
+
+          echo "Required project files are present."
+
+      - name: CI result
+        run: |
+          echo "======================================"
+          echo "Migration CI Validation PASSED"
+          echo "======================================"
+          
