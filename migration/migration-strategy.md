@@ -63,5 +63,4 @@ the MariaDB source and restored into the PXC cluster.
 
 The migration will proceed with the Dump and Restore approach.
 
-The actual migration testing, cutover, validation, and rollback
-activities will be handled in the subsequent migration tasks.
+The actual migration testing, cutover, validation, and rollback activities will be handled in the subsequent migration tasks.
