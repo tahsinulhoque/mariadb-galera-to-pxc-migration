@@ -86,4 +86,4 @@ The migration should be marked:
 COMPLETED
 ```
 
-only after the final production migration and post-cutover validation are successfully completed.`````
+only after the final production migration and post-cutover validation are successfully completed.
