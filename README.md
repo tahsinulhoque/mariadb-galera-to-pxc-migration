@@ -33,30 +33,9 @@ The source database is exported using `mysqldump` and restored into the PXC clus
 
 ## Architecture
 
-```text
-                  SOURCE ENVIRONMENT
-              MariaDB Galera Cluster
-                       │
-        ┌──────────────┼──────────────┐
-        │              │              │
-  mariadb-node1  mariadb-node2  mariadb-node3
-        │
-        │
-        │ mysqldump
-        ▼
-  migration_db.sql
-        │
-        │ Restore
-        ▼
-                 TARGET ENVIRONMENT
-              Percona XtraDB Cluster
-                       │
-        ┌──────────────┼──────────────┐
-        │              │              │
-    pxc-node1      pxc-node2      pxc-node3
-```
+The following diagram illustrates the MariaDB Galera to Percona XtraDB Cluster migration architecture.
 
----
+![Migration Architecture](docs/images/architecture.png)
 
 ## Technology Stack
 
